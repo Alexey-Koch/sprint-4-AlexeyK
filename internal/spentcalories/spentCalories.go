@@ -52,7 +52,7 @@ func distance(steps int) float64 {
 	// ваш код ниже
 	// 1. Умножаем количество шагов на длину шага
 	// 2. Делим на количество метров в километре
-	return float64(steps) * lenStep / 1000 // Дистанция в километрах
+	return float64(steps) * lenStep / mInKm // Дистанция в километрах
 }
 
 // meanSpeed возвращает значение средней скорости движения во время тренировки.
@@ -85,18 +85,10 @@ func meanSpeed(steps int, duration time.Duration) float64 {
 func TrainingInfo(data string, weight, height float64) string {
 	// ваш код ниже
 	// Разбираем входные данные
-	parts := strings.Split(data, ",")
-	if len(parts) != 3 {
-		return "Неверный формат данных"
-	}
-	steps, _ := strconv.Atoi(parts[0])
-	activity := parts[1]
-	durationStr := parts[2]
-
-	// Разбираем продолжительность
-	d, err := time.ParseDuration(durationStr)
+	//parts := strings.Split(data, ",")
+	steps, activity, d, err := parseTraining(data)
 	if err != nil {
-		return "Неверный формат продолжительности"
+		return fmt.Sprintf("Ошибка: %s", err)
 	}
 
 	// Вычисляем информацию о тренировке
@@ -114,13 +106,11 @@ func TrainingInfo(data string, weight, height float64) string {
 		return "Неподдерживаемый тип активности"
 	}
 	// Формируем строку с информацией
-	result := fmt.Sprintf("Тип тренировки: %s\n", activity)
-	result += fmt.Sprintf("Длительность: %.2f ч.\n", d.Hours())
-	result += fmt.Sprintf("Дистанция: %.2f км.\n", distanceKm)
-	result += fmt.Sprintf("Скорость: %.2f км/ч\n", speed)
-	result += fmt.Sprintf("Сожгли калорий: %.2f\n", caloriesBurned)
-
-	return result
+	return fmt.Sprintf("Тип тренировки: %s\n Длительность: %.2f ч.\n Дистанция: %.2f км.\n Скорость: %.2f км/ч\n Сожгли калорий: %.2f\n", activity, d.Hours(), distanceKm, speed, caloriesBurned)
+	//fmt.Sprintf("Длительность: %.2f ч.\n", d.Hours())
+	//fmt.Sprintf("Дистанция: %.2f км.\n", distanceKm)
+	//fmt.Sprintf("Скорость: %.2f км/ч\n", speed)
+	//fmt.Sprintf("Сожгли калорий: %.2f\n", caloriesBurned)
 }
 
 // Константы для расчета калорий, расходуемых при беге.

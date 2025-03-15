@@ -9,6 +9,10 @@ import (
 	"github.com/Yandex-Practicum/go1fl-4-sprint-final/internal/spentcalories"
 )
 
+const (
+	mInKm = 1000 // количество метров в километре.
+)
+
 var (
 	StepLength = 0.65 // длина шага в метрах
 )
@@ -17,7 +21,7 @@ func parsePackage(data string) (int, time.Duration, error) {
 	// Разделяем строку на слайс.
 	parts := strings.Split(data, ",")
 	if len(parts) != 2 {
-		return 0, 0, fmt.Errorf("недопустимый формат данных")
+		return 0, 0, fmt.Errorf("invalid data format")
 	}
 
 	// Преобразуем количество шагов в int.
@@ -52,7 +56,7 @@ func DayActionInfo(data string, weight, height float64) string {
 	steps, duration, err := parsePackage(data)
 	if err != nil {
 		fmt.Println(err)
-		return ""
+		return "invalid format"
 	}
 
 	// Проверяем, чтобы количество шагов было больше 0.
@@ -62,7 +66,7 @@ func DayActionInfo(data string, weight, height float64) string {
 
 	// Вычисляем дистанцию в метрах и переводим в километры.
 	distanceMeters := float64(steps) * StepLength
-	distanceKilometers := distanceMeters / 1000
+	distanceKilometers := distanceMeters / mInKm
 
 	// Вычисляем количество калорий, потраченных на прогулке.
 	calories := spentcalories.WalkingSpentCalories(steps, weight, height, duration)
